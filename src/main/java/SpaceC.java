@@ -73,11 +73,4 @@ public class SpaceC {
      */
     }
 
-    static void error(int line, String message) {
-        report(line, "", message);
-    }
-
-    private static void report(int line, String where, String message) {
-        System.err.printf(propertiesReader.getString("error_template"), line, where, message);
-    }
 }
