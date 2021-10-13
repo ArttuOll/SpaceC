@@ -8,6 +8,7 @@ import java.util.List;
 import lexer.Lexer;
 import lexer.Token;
 import utils.Exitcode;
+import utils.FileToStringConverter;
 import utils.PropertiesReader;
 
 public class SpaceC {
@@ -38,8 +39,7 @@ public class SpaceC {
     }
 
     private static void runFile(String path) throws IOException {
-        byte[] data = Files.readAllBytes(Paths.get(path));
-        String sourceCode = new String(data, Charset.defaultCharset());
+        String sourceCode = FileToStringConverter.convert(path);
         run(sourceCode);
         if (hasError) {
             System.exit(Exitcode.EX_DATAERR.value);
