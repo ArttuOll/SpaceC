@@ -4,6 +4,9 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import lexer.Lexer;
+import lexer.Token;
 import utils.Exitcode;
 import utils.PropertiesReader;
 
@@ -64,13 +67,10 @@ public class SpaceC {
     }
 
     private static void run(String source) {
-    /*
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
         for (Token token : tokens) {
             System.out.println(token);
         }
-     */
     }
-
 }
