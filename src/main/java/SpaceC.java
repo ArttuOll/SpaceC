@@ -4,22 +4,20 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import utils.Exitcode;
 import utils.PropertiesReader;
 
 public class SpaceC {
 
     static PropertiesReader propertiesReader = new PropertiesReader(
         "src/main/resources/strings.properties");
+    static boolean hasError = false;
 
     public static void main(String[] args) throws IOException {
 
         if (tooManyArgs(args)) {
             System.out.println(propertiesReader.getString("cli.error"));
-            /*
-                Exitcodes based on Unix sysexit.h, viewable here:
-                https://www.freebsd.org/cgi/man.cgi?query=sysexits&apropos=0&sektion=0&manpath=FreeBSD+4.3-RELEASE&format=html
-             */
-            System.exit(64);
+            System.exit(Exitcode.EX_USAGE.value);
         } else if (pathGiven(args)) {
             String path = args[0];
             runFile(path);
@@ -40,6 +38,9 @@ public class SpaceC {
         byte[] data = Files.readAllBytes(Paths.get(path));
         String sourceCode = new String(data, Charset.defaultCharset());
         run(sourceCode);
+        if (hasError) {
+            System.exit(Exitcode.EX_DATAERR.value);
+        }
     }
 
     private static void runPrompt() throws IOException {
@@ -53,6 +54,8 @@ public class SpaceC {
                 break;
             }
             run(sourceLine);
+            // Don't kill user's session if they make a mistake.
+            hasError = false;
         }
     }
 
@@ -68,5 +71,13 @@ public class SpaceC {
             System.out.println(token);
         }
      */
+    }
+
+    static void error(int line, String message) {
+        report(line, "", message);
+    }
+
+    private static void report(int line, String where, String message) {
+        System.err.printf(propertiesReader.getString("error_template"), line, where, message);
     }
 }
