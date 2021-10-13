@@ -1,5 +1,6 @@
 package lexer;
 
+import static lexer.tokenTypes.SingleCharacterToken.COLON;
 import static lexer.tokenTypes.SingleCharacterToken.COMMA;
 import static lexer.tokenTypes.SingleCharacterToken.DOT;
 import static lexer.tokenTypes.SingleCharacterToken.LEFT_BRACE;
@@ -58,6 +59,7 @@ public class Lexer {
             case '-' -> addToken(MINUS);
             case '+' -> addToken(PLUS);
             case ';' -> addToken(SEMICOLON);
+            case ':' -> addToken(COLON);
             case '*' -> addToken(STAR);
             default -> errorReporter.error(sourceLine, "lexer_error_unexpected_character");
         }
