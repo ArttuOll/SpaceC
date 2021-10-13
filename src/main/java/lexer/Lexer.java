@@ -21,7 +21,7 @@ public class Lexer {
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
-    private final int currentCharacterOfLexeme = 0;
+    private int currentCharacterOfLexeme = 0;
     private final int sourceLine = 1;
     private int firstCharacterOfLexeme = 0;
     private final ErrorReporter errorReporter;
@@ -47,6 +47,7 @@ public class Lexer {
 
     private void scanToken() {
         char character = consumeCharacter();
+        currentCharacterOfLexeme++;
         switch (character) {
             case '(' -> addToken(LEFT_PARENTHESIS);
             case ')' -> addToken(RIGHT_PARENTHESIS);
