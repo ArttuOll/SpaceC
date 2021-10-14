@@ -11,6 +11,12 @@ import static lexer.tokenTypes.SingleCharacterToken.RIGHT_BRACE;
 import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
 import static lexer.tokenTypes.SingleCharacterToken.STAR;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +28,10 @@ public class Lexer {
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
-    private int currentCharacterOfLexeme = 0;
     private final int sourceLine = 1;
-    private int firstCharacterOfLexeme = 0;
     private final ErrorReporter errorReporter;
+    private int currentCharacterOfLexeme = 0;
+    private int firstCharacterOfLexeme = 0;
 
     public Lexer(String source) {
         this.source = source;
@@ -42,13 +48,18 @@ public class Lexer {
         return tokens;
     }
 
-    private boolean charactersLeft() {
-        return !(currentCharacterOfLexeme >= source.length());
-    }
-
     private void scanToken() {
         char character = consumeCharacter();
         currentCharacterOfLexeme++;
+        scanSingleCharacterToken(character);
+        scanSingleOrTwoCharacterToken(character);
+    }
+
+    private char consumeCharacter() {
+        return source.charAt(currentCharacterOfLexeme);
+    }
+
+    private void scanSingleCharacterToken(char character) {
         switch (character) {
             case '(' -> addToken(LEFT_PARENTHESIS);
             case ')' -> addToken(RIGHT_PARENTHESIS);
@@ -61,12 +72,33 @@ public class Lexer {
             case ';' -> addToken(SEMICOLON);
             case ':' -> addToken(COLON);
             case '*' -> addToken(STAR);
+        }
+    }
+
+    private void scanSingleOrTwoCharacterToken(char character) {
+        switch (character) {
+            case '!' -> addToken(match('=') ? BANG_EQUAL : BANG);
+            case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
+            case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
             default -> errorReporter.error(sourceLine, "lexer_error_unexpected_character");
         }
     }
 
-    private char consumeCharacter() {
-        return source.charAt(currentCharacterOfLexeme);
+    private boolean match(char expected) {
+        if (!charactersLeft() || characterNotExpected(expected)) {
+            return false;
+        }
+
+        currentCharacterOfLexeme++;
+        return true;
+    }
+
+    private boolean charactersLeft() {
+        return !(currentCharacterOfLexeme >= source.length());
+    }
+
+    private boolean characterNotExpected(char character) {
+        return source.charAt(currentCharacterOfLexeme) != character;
     }
 
     private void addToken(TokenType type) {

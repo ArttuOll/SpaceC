@@ -7,13 +7,14 @@ import java.util.ArrayList;
 import java.util.List;
 import lexer.tokenTypes.EndOfFile;
 import lexer.tokenTypes.SingleCharacterToken;
+import lexer.tokenTypes.SingleOrTwoCharacterToken;
 import org.junit.jupiter.api.Test;
 import utils.FileToStringConverter;
 
 public class TokenizationTests {
 
     @Test
-    void returnsCorrectTokens() throws IOException {
+    void recognizesSingleCharacterTokens() throws IOException {
         String sourceCode = FileToStringConverter.convert(
             "src/test/resources/singleCharacterTokens.space");
         Lexer lexer = new Lexer(sourceCode);
@@ -30,6 +31,25 @@ public class TokenizationTests {
         expected.add(new Token(SingleCharacterToken.COMMA, ",", null, 1));
         expected.add(new Token(SingleCharacterToken.PLUS, "+", null, 1));
         expected.add(new Token(SingleCharacterToken.MINUS, "-", null, 1));
+        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void recognizesSingleOrTwoCharacterTokens() throws IOException {
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/singleOrTwoCharacterTokens.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.GREATER_EQUAL, ">=", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS, "<", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS_EQUAL, "<=", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG, "!", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG_EQUAL, "!=", null, 1));
         expected.add(new Token(EndOfFile.EOF, "", null, 1));
 
         List<Token> actual = lexer.scanTokens();
