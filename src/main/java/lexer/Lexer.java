@@ -50,13 +50,14 @@ public class Lexer {
 
     private void scanToken() {
         char character = consumeCharacter();
-        currentCharacterOfLexeme++;
         scanSingleCharacterToken(character);
         scanSingleOrTwoCharacterToken(character);
     }
 
     private char consumeCharacter() {
-        return source.charAt(currentCharacterOfLexeme);
+        char character = source.charAt(currentCharacterOfLexeme);
+        currentCharacterOfLexeme++;
+        return character;
     }
 
     private void scanSingleCharacterToken(char character) {
