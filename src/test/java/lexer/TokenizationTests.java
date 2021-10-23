@@ -57,6 +57,22 @@ public class TokenizationTests {
     }
 
     @Test
+    void recognizesComments() throws IOException {
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/comments.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 1));
+        expected.add(new Token(SingleCharacterToken.RIGHT_BRACE, "}", null, 1));
+        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
     void failsOnUnexpectedCharacter() throws IOException {
         String sourceCode = FileToStringConverter.convert(
             "src/test/resources/unexpectedCharacters.space");

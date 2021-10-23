@@ -10,6 +10,7 @@ import static lexer.tokenTypes.SingleCharacterToken.PLUS;
 import static lexer.tokenTypes.SingleCharacterToken.RIGHT_BRACE;
 import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
+import static lexer.tokenTypes.SingleCharacterToken.SLASH;
 import static lexer.tokenTypes.SingleCharacterToken.STAR;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
@@ -23,6 +24,7 @@ import java.util.List;
 import lexer.tokenTypes.EndOfFile;
 import lexer.tokenTypes.TokenType;
 import utils.ErrorReporter;
+import utils.EscapeCharacter;
 
 public class Lexer {
 
@@ -73,6 +75,7 @@ public class Lexer {
             case ';' -> addToken(SEMICOLON);
             case ':' -> addToken(COLON);
             case '*' -> addToken(STAR);
+            case '/' -> handleSlash();
         }
     }
 
@@ -94,10 +97,6 @@ public class Lexer {
         return true;
     }
 
-    private boolean charactersLeft() {
-        return !(currentCharacterOfLexeme >= source.length());
-    }
-
     private boolean characterNotExpected(char character) {
         return source.charAt(currentCharacterOfLexeme) != character;
     }
@@ -109,5 +108,26 @@ public class Lexer {
     private void addToken(TokenType type, Object literal) {
         String lexeme = source.substring(firstCharacterOfLexeme, currentCharacterOfLexeme);
         tokens.add(new Token(type, lexeme, literal, sourceLine));
+    }
+
+    private void handleSlash() {
+        if (match('/')) {
+            while (peek() != EscapeCharacter.NEWLINE.value && charactersLeft()) {
+                consumeCharacter();
+            }
+        } else {
+            addToken(SLASH);
+        }
+    }
+
+    private char peek() {
+        if (!charactersLeft()) {
+            return EscapeCharacter.NULL.value;
+        }
+        return source.charAt(currentCharacterOfLexeme);
+    }
+
+    private boolean charactersLeft() {
+        return !(currentCharacterOfLexeme >= source.length());
     }
 }
