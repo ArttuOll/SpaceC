@@ -45,12 +45,12 @@ public class TokenizationTests {
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.GREATER_EQUAL, ">=", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.LESS, "<", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.LESS_EQUAL, "<=", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.BANG, "!", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.BANG_EQUAL, "!=", null, 1));
-        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.GREATER_EQUAL, ">=", null, 2));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS, "<", null, 3));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS_EQUAL, "<=", null, 4));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG, "!", null, 5));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG_EQUAL, "!=", null, 6));
+        expected.add(new Token(EndOfFile.EOF, "", null, 6));
 
         List<Token> actual = lexer.scanTokens();
         assertEquals(expected, actual);
@@ -63,9 +63,25 @@ public class TokenizationTests {
         Lexer lexer = new Lexer(sourceCode);
 
         List<Token> expected = new ArrayList<>();
-        expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 1));
-        expected.add(new Token(SingleCharacterToken.RIGHT_BRACE, "}", null, 1));
-        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+        expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 2));
+        expected.add(new Token(SingleCharacterToken.RIGHT_BRACE, "}", null, 2));
+        expected.add(new Token(EndOfFile.EOF, "", null, 2));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+
+    }
+
+    @Test
+    void ignoresWhitespace() throws IOException {
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/whitespace.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 3));
+        expected.add(new Token(SingleCharacterToken.RIGHT_BRACE, "}", null, 3));
+        expected.add(new Token(EndOfFile.EOF, "", null, 5));
 
         List<Token> actual = lexer.scanTokens();
         assertEquals(expected, actual);

@@ -30,7 +30,7 @@ public class Lexer {
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
-    private final int sourceLine = 1;
+    private int sourceLine = 1;
     private final ErrorReporter errorReporter;
     private int currentCharacterOfLexeme = 0;
     private int firstCharacterOfLexeme = 0;
@@ -76,6 +76,9 @@ public class Lexer {
             case ':' -> addToken(COLON);
             case '*' -> addToken(STAR);
             case '/' -> handleSlash();
+            case '\n' -> sourceLine++;
+            case ' ', '\t', 'r' -> {
+            }
         }
     }
 
