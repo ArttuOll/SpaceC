@@ -22,6 +22,7 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 import java.util.ArrayList;
 import java.util.List;
 import lexer.tokenTypes.EndOfFile;
+import lexer.tokenTypes.LiteralToken;
 import lexer.tokenTypes.TokenType;
 import utils.ErrorReporter;
 import utils.EscapeCharacter;
@@ -54,12 +55,7 @@ public class Lexer {
         char character = consumeCharacter();
         scanSingleCharacterToken(character);
         scanSingleOrTwoCharacterToken(character);
-    }
-
-    private char consumeCharacter() {
-        char character = source.charAt(currentCharacterOfLexeme);
-        currentCharacterOfLexeme++;
-        return character;
+        scanLiteralToken(character);
     }
 
     private void scanSingleCharacterToken(char character) {
@@ -87,6 +83,12 @@ public class Lexer {
             case '!' -> addToken(match('=') ? BANG_EQUAL : BANG);
             case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
             case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
+        }
+    }
+
+    private void scanLiteralToken(char character) {
+        switch (character) {
+            case '"' -> handleStrings();
             default -> errorReporter.error(sourceLine, "lexer_error_unexpected_character");
         }
     }
@@ -123,6 +125,26 @@ public class Lexer {
         }
     }
 
+    private void handleStrings() {
+        while (peek() != '"' && charactersLeft()) {
+            if (peek() == EscapeCharacter.NEWLINE.value) {
+                sourceLine++;
+            }
+            consumeCharacter();
+        }
+
+        if (!charactersLeft()) {
+            errorReporter.error(sourceLine, "lexer_error_unterminated_string");
+            return;
+        }
+
+        // Consume the terminating double quote
+        consumeCharacter();
+
+        var string = getStringValue();
+        addToken(LiteralToken.STRING, string);
+    }
+
     private char peek() {
         if (!charactersLeft()) {
             return EscapeCharacter.NULL.value;
@@ -130,7 +152,18 @@ public class Lexer {
         return source.charAt(currentCharacterOfLexeme);
     }
 
+    private char consumeCharacter() {
+        char character = source.charAt(currentCharacterOfLexeme);
+        currentCharacterOfLexeme++;
+        return character;
+    }
+
     private boolean charactersLeft() {
         return !(currentCharacterOfLexeme >= source.length());
+    }
+
+    private String getStringValue() {
+        // Note, that escape characters are not supported (not escaped here).
+        return source.substring(firstCharacterOfLexeme + 1, currentCharacterOfLexeme - 1);
     }
 }

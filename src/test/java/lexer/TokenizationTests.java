@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lexer.tokenTypes.EndOfFile;
+import lexer.tokenTypes.LiteralToken;
 import lexer.tokenTypes.SingleCharacterToken;
 import lexer.tokenTypes.SingleOrTwoCharacterToken;
 import org.junit.jupiter.api.Test;
@@ -86,6 +87,33 @@ public class TokenizationTests {
         List<Token> actual = lexer.scanTokens();
         assertEquals(expected, actual);
 
+    }
+
+    @Test
+    void recognizesStrings() throws IOException {
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/strings.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        var singleLineLiteral = "Strings are easy to write.";
+        var multiLineLiteral = "\nMulti\nrow\nstrings\nare\nno\nproblem\n";
+        expected.add(new Token(
+            LiteralToken.STRING,
+            "\"Strings are easy to write.\"",
+            singleLineLiteral,
+            1
+        ));
+        expected.add(new Token(
+            LiteralToken.STRING,
+            "\"\nMulti\nrow\nstrings\nare\nno\nproblem\n\"",
+            multiLineLiteral,
+            10
+        ));
+        expected.add(new Token(EndOfFile.EOF, "", null, 10));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
     }
 
     @Test
