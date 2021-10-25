@@ -152,7 +152,6 @@ public class Lexer {
     }
 
     private void handleNumbers() {
-        // TODO: extract method
         while (nextCharacterIsDigit()) {
             consumeCharacter();
         }
@@ -177,7 +176,6 @@ public class Lexer {
     }
 
     private char doublePeek() {
-        // TODO: rename currentCharacterOfLexeme to something that reflects the fact that it is more like a pointer to the current character in the code.
         if (currentCharacterOfLexeme + 1 >= source.length()) {
             return EscapeCharacter.NULL.value;
         }

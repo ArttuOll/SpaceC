@@ -16,9 +16,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesSingleCharacterTokens() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/singleCharacterTokens.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/singleCharacterTokens.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_PARENTHESIS, "(", null, 1));
@@ -40,9 +38,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesSingleOrTwoCharacterTokens() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/singleOrTwoCharacterTokens.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/singleOrTwoCharacterTokens.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 1));
@@ -59,9 +55,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesComments() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/comments.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/comments.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 2));
@@ -75,9 +69,7 @@ public class TokenizationTests {
 
     @Test
     void ignoresWhitespace() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/whitespace.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/whitespace.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 3));
@@ -91,9 +83,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesStrings() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/strings.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/strings.space");
 
         List<Token> expected = new ArrayList<>();
         var singleLineLiteral = "Strings are easy to write.";
@@ -118,10 +108,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesIntegers() throws IOException {
-        // TODO: extract function
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/integers.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/integers.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(LiteralToken.NUMBER, "0", 0.0, 1));
@@ -142,9 +129,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesDoubles() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/doubles.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/doubles.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(LiteralToken.NUMBER, "1.2345", 1.2345, 1));
@@ -157,9 +142,7 @@ public class TokenizationTests {
 
     @Test
     void failsOnUnexpectedCharacter() throws IOException {
-        String sourceCode = FileToStringConverter.convert(
-            "src/test/resources/unexpectedCharacters.space");
-        Lexer lexer = new Lexer(sourceCode);
+        Lexer lexer = initializeLexer("src/test/resources/unexpectedCharacters.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(EndOfFile.EOF, "", null, 1));
@@ -167,5 +150,10 @@ public class TokenizationTests {
         List<Token> actual = lexer.scanTokens();
 
         assertEquals(expected, actual);
+    }
+
+    private Lexer initializeLexer(String testFilePath) throws IOException {
+        String sourceCode = FileToStringConverter.convert(testFilePath);
+        return new Lexer(sourceCode);
     }
 }
