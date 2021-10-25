@@ -18,7 +18,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesSingleCharacterTokens() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/singleCharacterTokens.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/singleCharacterTokens.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_PARENTHESIS, "(", null, 1));
@@ -40,7 +40,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesSingleOrTwoCharacterTokens() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/singleOrTwoCharacterTokens.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/singleOrTwoCharacterTokens.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 1));
@@ -57,7 +57,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesComments() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/comments.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/comments.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 2));
@@ -71,7 +71,7 @@ public class TokenizationTests {
 
     @Test
     void ignoresWhitespace() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/whitespace.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/whitespace.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(SingleCharacterToken.LEFT_BRACE, "{", null, 3));
@@ -85,7 +85,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesStrings() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/strings.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/strings.space");
 
         List<Token> expected = new ArrayList<>();
         var singleLineLiteral = "Strings are easy to write.";
@@ -110,7 +110,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesIntegers() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/integers.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/integers.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(LiteralToken.NUMBER, "0", 0.0, 1));
@@ -131,7 +131,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesDoubles() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/doubles.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/doubles.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(LiteralToken.NUMBER, "1.2345", 1.2345, 1));
@@ -144,7 +144,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesKeywords() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/keywords.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/keywords.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(Keyword.NIL, "nil", null, 1));
@@ -158,7 +158,7 @@ public class TokenizationTests {
 
     @Test
     void recognizesIdentifiers() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/identifiers.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/identifiers.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(IdentifierToken.IDENTIFIER, "hello", null, 1));
@@ -171,7 +171,7 @@ public class TokenizationTests {
 
     @Test
     void failsOnUnexpectedCharacter() throws IOException {
-        Lexer lexer = initializeLexer("src/test/resources/unexpectedCharacters.space");
+        Lexer lexer = initializeLexer("src/test/resources/lexer/unexpectedCharacters.space");
 
         List<Token> expected = new ArrayList<>();
         expected.add(new Token(EndOfFile.EOF, "", null, 1));
