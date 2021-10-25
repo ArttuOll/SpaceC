@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import lexer.tokenTypes.EndOfFile;
+import lexer.tokenTypes.IdentifierToken;
+import lexer.tokenTypes.Keyword;
 import lexer.tokenTypes.LiteralToken;
 import lexer.tokenTypes.SingleCharacterToken;
 import lexer.tokenTypes.SingleOrTwoCharacterToken;
@@ -135,6 +137,33 @@ public class TokenizationTests {
         expected.add(new Token(LiteralToken.NUMBER, "1.2345", 1.2345, 1));
         expected.add(new Token(LiteralToken.NUMBER, "0.1234", 0.1234, 2));
         expected.add(new Token(EndOfFile.EOF, "", null, 2));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void recognizesKeywords() throws IOException {
+        Lexer lexer = initializeLexer("src/test/resources/keywords.space");
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(Keyword.NIL, "nil", null, 1));
+        expected.add(new Token(Keyword.FALSE, "false", null, 1));
+        expected.add(new Token(Keyword.TRUE, "true", null, 1));
+        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void recognizesIdentifiers() throws IOException {
+        Lexer lexer = initializeLexer("src/test/resources/identifiers.space");
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(IdentifierToken.IDENTIFIER, "hello", null, 1));
+        expected.add(new Token(IdentifierToken.IDENTIFIER, "world", null, 1));
+        expected.add(new Token(EndOfFile.EOF, "", null, 1));
 
         List<Token> actual = lexer.scanTokens();
         assertEquals(expected, actual);

@@ -21,7 +21,9 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import lexer.tokenTypes.EndOfFile;
+import lexer.tokenTypes.IdentifierToken;
 import lexer.tokenTypes.LiteralToken;
 import lexer.tokenTypes.TokenType;
 import utils.ErrorReporter;
@@ -56,6 +58,7 @@ public class Lexer {
         scanSingleCharacterToken(character);
         scanSingleOrTwoCharacterToken(character);
         scanLiteralToken(character);
+        scanIdentifier(character);
     }
 
     private void scanSingleCharacterToken(char character) {
@@ -88,15 +91,35 @@ public class Lexer {
 
     private void scanLiteralToken(char character) {
         switch (character) {
-            case '"':
-                handleStrings();
-                break;
-            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9': {
-                handleNumbers();
-            }
-            default:
-                errorReporter.error(sourceLine, "lexer_error_unexpected_character");
+            case '"' -> handleStrings();
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> handleNumbers();
         }
+    }
+
+    private void scanIdentifier(char character) {
+        if (isAlphabetic(character)) {
+            handleIdentifiers();
+        } else {
+            errorReporter.error(sourceLine, "lexer_error_unexpected_character");
+        }
+    }
+
+    private boolean isAlphabetic(char character) {
+        return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z';
+    }
+
+    private boolean isAlphaNumeric(char character) {
+        return isAlphabetic(character) || Character.isDigit(character);
+    }
+
+    private void handleIdentifiers() {
+        while (isAlphaNumeric(peek())) {
+            consumeCharacter();
+        }
+
+        String identifier = source.substring(firstCharacterOfLexeme, currentCharacterOfLexeme);
+        TokenType tokenType = Keywords.checkKeywordType(identifier);
+        addToken(Objects.requireNonNullElse(tokenType, IdentifierToken.IDENTIFIER));
     }
 
     private boolean match(char expected) {
