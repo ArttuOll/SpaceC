@@ -31,8 +31,8 @@ public class Lexer {
 
     private final String source;
     private final List<Token> tokens = new ArrayList<>();
-    private int sourceLine = 1;
     private final ErrorReporter errorReporter;
+    private int sourceLine = 1;
     private int currentCharacterOfLexeme = 0;
     private int firstCharacterOfLexeme = 0;
 
@@ -88,8 +88,14 @@ public class Lexer {
 
     private void scanLiteralToken(char character) {
         switch (character) {
-            case '"' -> handleStrings();
-            default -> errorReporter.error(sourceLine, "lexer_error_unexpected_character");
+            case '"':
+                handleStrings();
+                break;
+            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9': {
+                handleNumbers();
+            }
+            default:
+                errorReporter.error(sourceLine, "lexer_error_unexpected_character");
         }
     }
 
@@ -145,6 +151,39 @@ public class Lexer {
         addToken(LiteralToken.STRING, string);
     }
 
+    private void handleNumbers() {
+        // TODO: extract method
+        while (nextCharacterIsDigit()) {
+            consumeCharacter();
+        }
+
+        if (peek() == '.' && Character.isDigit(doublePeek())) {
+            // Consume the decimal separator
+            consumeCharacter();
+
+            while (nextCharacterIsDigit()) {
+                consumeCharacter();
+            }
+        }
+
+        addToken(
+            LiteralToken.NUMBER,
+            Double.parseDouble(source.substring(firstCharacterOfLexeme, currentCharacterOfLexeme))
+        );
+    }
+
+    private boolean nextCharacterIsDigit() {
+        return Character.isDigit(peek());
+    }
+
+    private char doublePeek() {
+        // TODO: rename currentCharacterOfLexeme to something that reflects the fact that it is more like a pointer to the current character in the code.
+        if (currentCharacterOfLexeme + 1 >= source.length()) {
+            return EscapeCharacter.NULL.value;
+        }
+        return source.charAt(currentCharacterOfLexeme + 1);
+    }
+
     private char peek() {
         if (!charactersLeft()) {
             return EscapeCharacter.NULL.value;
@@ -159,7 +198,7 @@ public class Lexer {
     }
 
     private boolean charactersLeft() {
-        return !(currentCharacterOfLexeme >= source.length());
+        return currentCharacterOfLexeme < source.length();
     }
 
     private String getStringValue() {

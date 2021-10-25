@@ -117,6 +117,45 @@ public class TokenizationTests {
     }
 
     @Test
+    void recognizesIntegers() throws IOException {
+        // TODO: extract function
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/integers.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(LiteralToken.NUMBER, "0", 0.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "1", 1.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "2", 2.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "3", 3.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "4", 4.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "5", 5.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "6", 6.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "7", 7.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "8", 8.0, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "9", 9.0, 1));
+        expected.add(new Token(EndOfFile.EOF, "", null, 1));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    void recognizesDoubles() throws IOException {
+        String sourceCode = FileToStringConverter.convert(
+            "src/test/resources/doubles.space");
+        Lexer lexer = new Lexer(sourceCode);
+
+        List<Token> expected = new ArrayList<>();
+        expected.add(new Token(LiteralToken.NUMBER, "1.2345", 1.2345, 1));
+        expected.add(new Token(LiteralToken.NUMBER, "0.1234", 0.1234, 2));
+        expected.add(new Token(EndOfFile.EOF, "", null, 2));
+
+        List<Token> actual = lexer.scanTokens();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     void failsOnUnexpectedCharacter() throws IOException {
         String sourceCode = FileToStringConverter.convert(
             "src/test/resources/unexpectedCharacters.space");
