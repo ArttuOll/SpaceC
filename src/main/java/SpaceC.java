@@ -2,6 +2,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Objects;
 import lexer.Lexer;
 import lexer.Token;
 import utils.Exitcode;
@@ -50,7 +51,7 @@ public class SpaceC {
         while (true) {
             printPrompt();
             String sourceLine = reader.readLine();
-            if (sourceLine == null) {
+            if (Objects.equals(sourceLine, "exit")) {
                 break;
             }
             run(sourceLine);
