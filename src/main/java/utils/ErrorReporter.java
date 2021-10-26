@@ -6,10 +6,10 @@ public class ErrorReporter {
         "src/main/resources/strings.properties");
 
     public void error(int line, String messageKey) {
-        report(line, "", propertiesReader.getString(messageKey));
+        report(line, propertiesReader.getString(messageKey));
     }
 
-    private void report(int line, String where, String message) {
-        System.err.printf(propertiesReader.getString("error_template"), line, where, message);
+    private void report(int line, String message) {
+        System.err.printf(propertiesReader.getString("error_template"), line, message);
     }
 }
