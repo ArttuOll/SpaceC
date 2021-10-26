@@ -55,13 +55,6 @@ public class Lexer {
 
     private void scanToken() {
         char character = consumeCharacter();
-        scanSingleCharacterToken(character);
-        scanSingleOrTwoCharacterToken(character);
-        scanLiteralToken(character);
-        scanIdentifier(character);
-    }
-
-    private void scanSingleCharacterToken(char character) {
         switch (character) {
             case '(' -> addToken(LEFT_PARENTHESIS);
             case ')' -> addToken(RIGHT_PARENTHESIS);
@@ -76,31 +69,15 @@ public class Lexer {
             case '*' -> addToken(STAR);
             case '/' -> handleSlash();
             case '\n' -> sourceLine++;
-            case ' ', '\t', 'r' -> {
+            case ' ', '\t', '\r' -> {
             }
-        }
-    }
-
-    private void scanSingleOrTwoCharacterToken(char character) {
-        switch (character) {
             case '!' -> addToken(match('=') ? BANG_EQUAL : BANG);
             case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
             case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
-        }
-    }
-
-    private void scanLiteralToken(char character) {
-        switch (character) {
             case '"' -> handleStrings();
             case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' -> handleNumbers();
-        }
-    }
-
-    private void scanIdentifier(char character) {
-        if (isAlphabetic(character)) {
-            handleIdentifiers();
-        } else {
-            errorReporter.error(sourceLine, "lexer_error_unexpected_character");
+            case 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z' -> handleIdentifiers();
+            default -> errorReporter.error(sourceLine, "lexer_error_unexpected_character");
         }
     }
 
