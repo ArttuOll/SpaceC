@@ -32,7 +32,7 @@ import utils.EscapeCharacter;
 public class Lexer {
 
     private final String source;
-    private final List<Token> tokens = new ArrayList<>();
+    private final List<Token> tokens;
     private final ErrorReporter errorReporter;
     private int sourceLine = 1;
     private int currentCharacterOfLexeme = 0;
@@ -41,6 +41,7 @@ public class Lexer {
     public Lexer(String source) {
         this.source = source;
         this.errorReporter = new ErrorReporter();
+        this.tokens = new ArrayList<>();
     }
 
     public List<Token> scanTokens() {
