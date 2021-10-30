@@ -29,6 +29,16 @@ import lexer.tokenTypes.TokenType;
 import utils.ErrorReporter;
 import utils.EscapeCharacter;
 
+/**
+ * This is the tokenizer of SpaceC.
+ * <p>
+ * It uses a lookahead of 1 in tokenization. When tokenizing decimal numbers, lookahead of 2 is used
+ * briefly in order to see if there are digits after the decimal separator.
+ * <p>
+ * Whitespace (" ", \r and \t) characters are ignored. Newlines increment the source line marker.
+ * <p>
+ * Untokenizable characters are reported to the user, but they do not interrupt tokenization.
+ */
 public class Lexer {
 
     private final String source;
