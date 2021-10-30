@@ -11,4 +11,9 @@ class Unary extends Expression {
         this.operator = operator;
         this.right = right;
     }
+
+    @Override
+    <R> R accept(ExpressionVisitor<R> visitor) {
+        return visitor.visitUnaryExpression(this);
+    }
 }

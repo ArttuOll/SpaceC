@@ -7,4 +7,9 @@ class Grouping extends Expression {
     Grouping(Expression expression) {
         this.expression = expression;
     }
+
+    @Override
+    <R> R accept(ExpressionVisitor<R> visitor) {
+        return visitor.visitGroupingExpression(this);
+    }
 }

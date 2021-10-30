@@ -7,4 +7,10 @@ class Literal extends Expression {
     Literal(Object value) {
         this.value = value;
     }
+
+
+    @Override
+    <R> R accept(ExpressionVisitor<R> visitor) {
+        return visitor.visitLiteralExpression(this);
+    }
 }
