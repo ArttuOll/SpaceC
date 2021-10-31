@@ -43,13 +43,14 @@ public class TokenizationTests {
         Lexer lexer = initializeLexer("src/test/resources/lexer/singleOrTwoCharacterTokens.space");
 
         List<Token> expected = new ArrayList<>();
-        expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 1));
-        expected.add(new Token(SingleOrTwoCharacterToken.GREATER_EQUAL, ">=", null, 2));
-        expected.add(new Token(SingleOrTwoCharacterToken.LESS, "<", null, 3));
-        expected.add(new Token(SingleOrTwoCharacterToken.LESS_EQUAL, "<=", null, 4));
-        expected.add(new Token(SingleOrTwoCharacterToken.BANG, "!", null, 5));
-        expected.add(new Token(SingleOrTwoCharacterToken.BANG_EQUAL, "!=", null, 6));
-        expected.add(new Token(EndOfFile.EOF, "", null, 6));
+        expected.add(new Token(SingleOrTwoCharacterToken.EQUAL, "=", null, 1));
+        expected.add(new Token(SingleOrTwoCharacterToken.GREATER, ">", null, 2));
+        expected.add(new Token(SingleOrTwoCharacterToken.GREATER_EQUAL, ">=", null, 3));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS, "<", null, 4));
+        expected.add(new Token(SingleOrTwoCharacterToken.LESS_EQUAL, "<=", null, 5));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG, "!", null, 6));
+        expected.add(new Token(SingleOrTwoCharacterToken.BANG_EQUAL, "!=", null, 7));
+        expected.add(new Token(EndOfFile.EOF, "", null, 7));
 
         List<Token> actual = lexer.scanTokens();
         assertEquals(expected, actual);

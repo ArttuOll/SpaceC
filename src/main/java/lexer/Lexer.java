@@ -14,6 +14,7 @@ import static lexer.tokenTypes.SingleCharacterToken.SLASH;
 import static lexer.tokenTypes.SingleCharacterToken.STAR;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.EQUAL;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
@@ -82,6 +83,7 @@ public class Lexer {
             case '\n' -> sourceLine++;
             case ' ', '\t', '\r' -> {
             }
+            case '=' -> addToken(EQUAL);
             case '!' -> addToken(match('=') ? BANG_EQUAL : BANG);
             case '>' -> addToken(match('=') ? GREATER_EQUAL : GREATER);
             case '<' -> addToken(match('=') ? LESS_EQUAL : LESS);
