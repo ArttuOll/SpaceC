@@ -1,12 +1,12 @@
 package parser.expression.util;
 
 import java.util.Arrays;
-import parser.expression.Binary;
+import parser.expression.BinaryExpression;
 import parser.expression.Expression;
 import parser.expression.ExpressionVisitor;
-import parser.expression.Grouping;
-import parser.expression.Literal;
-import parser.expression.Unary;
+import parser.expression.GroupingExpression;
+import parser.expression.LiteralExpression;
+import parser.expression.UnaryExpression;
 
 public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
 
@@ -17,22 +17,22 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     }
 
     @Override
-    public String visitBinaryExpression(Binary expression) {
+    public String visitBinaryExpression(BinaryExpression expression) {
         return toSchemeString(expression.operator.lexeme(), expression.left, expression.right);
     }
 
     @Override
-    public String visitUnaryExpression(Unary expression) {
+    public String visitUnaryExpression(UnaryExpression expression) {
         return toSchemeString(expression.operator.lexeme(), expression.right);
     }
 
     @Override
-    public String visitGroupingExpression(Grouping expression) {
+    public String visitGroupingExpression(GroupingExpression expression) {
         return toSchemeString("group", expression.expression);
     }
 
     @Override
-    public String visitLiteralExpression(Literal expression) {
+    public String visitLiteralExpression(LiteralExpression expression) {
         return expression.value == null ? "nil" : expression.value.toString();
     }
 

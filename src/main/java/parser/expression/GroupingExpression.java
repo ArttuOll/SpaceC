@@ -1,10 +1,10 @@
 package parser.expression;
 
-public class Grouping extends Expression {
+public class GroupingExpression extends Expression {
 
     public final Expression expression;
 
-    public Grouping(Expression expression) {
+    public GroupingExpression(Expression expression) {
         this.expression = expression;
     }
 

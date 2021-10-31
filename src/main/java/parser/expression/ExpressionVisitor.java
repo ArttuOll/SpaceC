@@ -2,12 +2,12 @@ package parser.expression;
 
 public interface ExpressionVisitor<R> {
 
-    R visitBinaryExpression(Binary expression);
+    R visitBinaryExpression(BinaryExpression expression);
 
-    R visitUnaryExpression(Unary expression);
+    R visitUnaryExpression(UnaryExpression expression);
 
-    R visitGroupingExpression(Grouping expression);
+    R visitGroupingExpression(GroupingExpression expression);
 
-    R visitLiteralExpression(Literal expression);
+    R visitLiteralExpression(LiteralExpression expression);
 
 }
