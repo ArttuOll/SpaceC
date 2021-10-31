@@ -1,5 +1,6 @@
 package parser.expression;
 
-abstract class Expression {
-    abstract <R> R accept(ExpressionVisitor<R> visitor);
+public abstract class Expression {
+
+    public abstract <R> R accept(ExpressionVisitor<R> visitor);
 }

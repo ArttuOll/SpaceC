@@ -2,13 +2,13 @@ package parser.expression;
 
 import lexer.Token;
 
-class Binary extends Expression {
+public class Binary extends Expression {
 
-    final Expression left;
-    final Token operator;
-    final Expression right;
+    public final Expression left;
+    public final Token operator;
+    public final Expression right;
 
-    Binary(Expression left, Token operator, Expression right) {
+    public Binary(Expression left, Token operator, Expression right) {
         this.left = left;
         this.operator = operator;
         this.right = right;
@@ -16,7 +16,7 @@ class Binary extends Expression {
 
 
     @Override
-    <R> R accept(ExpressionVisitor<R> visitor) {
+    public <R> R accept(ExpressionVisitor<R> visitor) {
         return visitor.visitBinaryExpression(this);
     }
 }

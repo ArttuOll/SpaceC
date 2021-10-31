@@ -1,6 +1,6 @@
 package parser.expression;
 
-interface ExpressionVisitor<R> {
+public interface ExpressionVisitor<R> {
 
     R visitBinaryExpression(Binary expression);
 

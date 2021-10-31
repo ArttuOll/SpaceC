@@ -1,15 +1,15 @@
 package parser.expression;
 
-class Grouping extends Expression {
+public class Grouping extends Expression {
 
-    final Expression expression;
+    public final Expression expression;
 
-    Grouping(Expression expression) {
+    public Grouping(Expression expression) {
         this.expression = expression;
     }
 
     @Override
-    <R> R accept(ExpressionVisitor<R> visitor) {
+    public <R> R accept(ExpressionVisitor<R> visitor) {
         return visitor.visitGroupingExpression(this);
     }
 }

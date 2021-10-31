@@ -1,16 +1,16 @@
 package parser.expression;
 
-class Literal extends Expression {
+public class Literal extends Expression {
 
-    final Object value;
+    public final Object value;
 
-    Literal(Object value) {
+    public Literal(Object value) {
         this.value = value;
     }
 
 
     @Override
-    <R> R accept(ExpressionVisitor<R> visitor) {
+    public <R> R accept(ExpressionVisitor<R> visitor) {
         return visitor.visitLiteralExpression(this);
     }
 }
