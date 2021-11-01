@@ -96,14 +96,6 @@ public class Lexer {
         }
     }
 
-    private boolean isAlphabetic(char character) {
-        return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z';
-    }
-
-    private boolean isAlphaNumeric(char character) {
-        return isAlphabetic(character) || Character.isDigit(character);
-    }
-
     private void handleIdentifiers() {
         while (isAlphaNumeric(peek())) {
             consumeCharacter();
@@ -112,6 +104,14 @@ public class Lexer {
         String identifier = source.substring(firstCharacterOfLexeme, currentCharacterOfLexeme);
         TokenType tokenType = Keywords.checkKeywordType(identifier);
         addToken(Objects.requireNonNullElse(tokenType, IdentifierToken.IDENTIFIER));
+    }
+
+    private boolean isAlphaNumeric(char character) {
+        return isAlphabetic(character) || Character.isDigit(character);
+    }
+
+    private boolean isAlphabetic(char character) {
+        return character >= 'a' && character <= 'z' || character >= 'A' && character <= 'Z';
     }
 
     private boolean match(char expected) {
