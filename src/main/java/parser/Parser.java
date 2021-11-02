@@ -8,6 +8,7 @@ import static lexer.tokenTypes.LiteralToken.STRING;
 import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.MINUS;
 import static lexer.tokenTypes.SingleCharacterToken.PLUS;
+import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.SLASH;
 import static lexer.tokenTypes.SingleCharacterToken.STAR;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
@@ -27,6 +28,7 @@ import parser.expression.Expression;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import utils.ErrorReporter;
 
 /**
  * This is the parser of SpaceC. It is a recursive descent parser, a type of top-down parser,
@@ -39,11 +41,13 @@ import parser.expression.UnaryExpression;
 class Parser {
 
     private final List<Token> tokens;
+    private final ErrorReporter errorReporter;
     private int nextTokenPointer;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
         this.nextTokenPointer = 0;
+        this.errorReporter = new ErrorReporter();
     }
 
     private Expression expression() {
@@ -149,6 +153,11 @@ class Parser {
         return previous();
     }
 
+    private ParseError dispatchParseError(Token token, String error) {
+        errorReporter.error(token, error);
+        return new ParseError();
+    }
+
     private boolean isAtEnd() {
         Token nextToken = peek();
         return nextToken.type() == EndOfFile.EOF;
@@ -160,5 +169,9 @@ class Parser {
 
     private Token previous() {
         return tokens.get(nextTokenPointer - 1);
+    }
+
+    private static class ParseError extends RuntimeException {
+
     }
 }
