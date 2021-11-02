@@ -1,14 +1,22 @@
 package parser;
 
+import static lexer.tokenTypes.Keyword.CLASS;
 import static lexer.tokenTypes.Keyword.FALSE;
+import static lexer.tokenTypes.Keyword.FOR;
+import static lexer.tokenTypes.Keyword.FUN;
+import static lexer.tokenTypes.Keyword.IF;
 import static lexer.tokenTypes.Keyword.NIL;
+import static lexer.tokenTypes.Keyword.PRINT;
+import static lexer.tokenTypes.Keyword.RETURN;
 import static lexer.tokenTypes.Keyword.TRUE;
+import static lexer.tokenTypes.Keyword.WHILE;
 import static lexer.tokenTypes.LiteralToken.NUMBER;
 import static lexer.tokenTypes.LiteralToken.STRING;
 import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.MINUS;
 import static lexer.tokenTypes.SingleCharacterToken.PLUS;
 import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
+import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
 import static lexer.tokenTypes.SingleCharacterToken.SLASH;
 import static lexer.tokenTypes.SingleCharacterToken.STAR;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
@@ -19,6 +27,7 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 
+import java.util.Arrays;
 import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.EndOfFile;
@@ -120,7 +129,7 @@ class Parser {
             return new LiteralExpression(matchedToken.literal());
         } else if (matchNextTokenWith(LEFT_PARENTHESIS)) {
             Expression expression = expression();
-            // consume(RIGHT_PARENTHESIS, "No closing parenthesis after expression.");
+            consume(RIGHT_PARENTHESIS, "No closing parenthesis after expression.");
             return new GroupingExpression(expression);
         }
         // TODO: error handling here.
@@ -136,6 +145,13 @@ class Parser {
         }
 
         return false;
+    }
+
+    private Token consume(TokenType type, String message) {
+        if (checkNextTokenMatches(type)) {
+            return advance();
+        }
+        throw dispatchParseError(peek(), message);
     }
 
     private boolean checkNextTokenMatches(TokenType type) {
@@ -169,6 +185,30 @@ class Parser {
 
     private Token previous() {
         return tokens.get(nextTokenPointer - 1);
+    }
+
+    private void synchronize() {
+        advance();
+
+        while (!isAtEnd()) {
+            discardTokensUntilStatementBoundaryFound();
+        }
+    }
+
+    private void discardTokensUntilStatementBoundaryFound() {
+        Token currentProcessedToken = previous();
+        if (currentProcessedToken.type() == SEMICOLON) {
+            return;
+        }
+
+        Token nextToken = peek();
+        var statementBorderIndicatingTokens = Arrays.asList(
+            new TokenType[]{CLASS, FUN, FOR, IF, WHILE, PRINT, RETURN});
+        if (statementBorderIndicatingTokens.contains(nextToken.type())) {
+            return;
+        }
+
+        advance();
     }
 
     private static class ParseError extends RuntimeException {
