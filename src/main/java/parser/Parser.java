@@ -48,7 +48,7 @@ import utils.PropertiesReader;
  * rule of the expression with next highest precedence and then conditionally process the current
  * rule. This way the rules always match the current expression or anything of higher precedence.
  */
-class Parser {
+public class Parser {
 
     private final List<Token> tokens;
     private final ErrorReporter errorReporter;
@@ -60,6 +60,14 @@ class Parser {
         this.nextTokenPointer = 0;
         this.errorReporter = new ErrorReporter();
         this.propertiesReader = new PropertiesReader("src/main/resources/strings.properties");
+    }
+
+    public Expression parse() {
+        try {
+            return expression();
+        } catch (ParseError error) {
+            return null;
+        }
     }
 
     private Expression expression() {

@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Objects;
 import lexer.Lexer;
 import lexer.Token;
+import parser.Parser;
+import parser.expression.Expression;
+import parser.expression.util.AbstractSyntaxTreePrinter;
 import utils.Exitcode;
 import utils.FileToStringConverter;
 import utils.PropertiesReader;
@@ -67,8 +70,14 @@ public class SpaceC {
     private static void run(String source) {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
-        for (Token token : tokens) {
-            System.out.println(token);
+        Parser parser = new Parser(tokens);
+        Expression expression = parser.parse();
+
+        if (hasError) {
+            return;
         }
+
+        AbstractSyntaxTreePrinter printer = new AbstractSyntaxTreePrinter();
+        System.out.println(printer.print(expression));
     }
 }
