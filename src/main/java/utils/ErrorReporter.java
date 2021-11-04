@@ -2,6 +2,7 @@ package utils;
 
 import static lexer.tokenTypes.EndOfFile.EOF;
 
+import core.SpaceC;
 import lexer.Token;
 
 public class ErrorReporter {
@@ -34,5 +35,6 @@ public class ErrorReporter {
             message,
             erroneusPart
         );
+        SpaceC.hasError = true;
     }
 }

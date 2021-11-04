@@ -1,3 +1,5 @@
+package core;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,7 +18,7 @@ public class SpaceC {
 
     static PropertiesReader propertiesReader = new PropertiesReader(
         "src/main/resources/strings.properties");
-    static boolean hasError = false;
+    public static boolean hasError = false;
 
     public static void main(String[] args) throws IOException {
 
