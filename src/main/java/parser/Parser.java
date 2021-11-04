@@ -38,6 +38,7 @@ import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
 import utils.ErrorReporter;
+import utils.PropertiesReader;
 
 /**
  * This is the parser of SpaceC. It is a recursive descent parser, a type of top-down parser,
@@ -51,12 +52,14 @@ class Parser {
 
     private final List<Token> tokens;
     private final ErrorReporter errorReporter;
+    private final PropertiesReader propertiesReader;
     private int nextTokenPointer;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
         this.nextTokenPointer = 0;
         this.errorReporter = new ErrorReporter();
+        this.propertiesReader = new PropertiesReader("src/main/resources/strings.properties");
     }
 
     private Expression expression() {
@@ -129,11 +132,16 @@ class Parser {
             return new LiteralExpression(matchedToken.literal());
         } else if (matchNextTokenWith(LEFT_PARENTHESIS)) {
             Expression expression = expression();
-            consume(RIGHT_PARENTHESIS, "No closing parenthesis after expression.");
+            consume(
+                RIGHT_PARENTHESIS,
+                propertiesReader.getString("parser_error_no_closing_parenthesis")
+            );
             return new GroupingExpression(expression);
         }
-        // TODO: error handling here.
-        return null;
+        throw dispatchParseError(
+            peek(),
+            propertiesReader.getString("parser_error_expected_expression")
+        );
     }
 
     private boolean matchNextTokenWith(TokenType... types) {
