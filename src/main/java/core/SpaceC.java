@@ -72,6 +72,7 @@ public class SpaceC {
     private static void run(String source) {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
+        tokens.forEach(System.out::println);
         Parser parser = new Parser(tokens);
         Expression expression = parser.parse();
 
