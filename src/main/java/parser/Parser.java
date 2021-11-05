@@ -42,11 +42,15 @@ import utils.PropertiesReader;
 
 /**
  * This is the parser of SpaceC. It is a recursive descent parser, a type of top-down parser,
- * meaning we parse the syntax tree from the root towards the leaves.
+ * meaning we parse the syntax tree from the root towards the leaves. It can also be considered to
+ * be a LL(1) predictive parser, since in some instances it peeks forward in the token stream to
+ * decide which production to use.
  * <p>
  * Note, how the most grammatical rules are implemented. In the beginning of the method we call the
  * rule of the expression with next highest precedence and then conditionally process the current
  * rule. This way the rules always match the current expression or anything of higher precedence.
+ * This also matches the order in which expressions are evaluated in mathematics.
+ * <p>
  */
 public class Parser {
 
