@@ -3,6 +3,7 @@ package utils;
 import static lexer.tokenTypes.EndOfFile.EOF;
 
 import core.SpaceC;
+import interpreter.RuntimeError;
 import lexer.Token;
 
 public class ErrorReporter {
@@ -14,8 +15,8 @@ public class ErrorReporter {
         report(line, propertiesReader.getString(messageKey), "");
     }
 
-    public void error(int line, String messageKey, String erroneusCharacter) {
-        report(line, propertiesReader.getString(messageKey), erroneusCharacter);
+    public void error(int line, String messageKey, String erroneousCharacter) {
+        report(line, propertiesReader.getString(messageKey), erroneousCharacter);
     }
 
     public void error(Token token, String message) {
@@ -28,13 +29,22 @@ public class ErrorReporter {
         }
     }
 
-    private void report(int line, String message, String erroneusPart) {
+    private void report(int line, String message, String erroneousPart) {
         System.err.printf(
             propertiesReader.getString("error_template"),
             line,
             message,
-            erroneusPart
+            erroneousPart
         );
         SpaceC.hasError = true;
+    }
+
+    public void runtimeError(RuntimeError error) {
+        System.err.printf(
+            propertiesReader.getString("error_template"),
+            error.token.line(),
+            error.getMessage()
+        );
+        SpaceC.hasRuntimeError = true;
     }
 }

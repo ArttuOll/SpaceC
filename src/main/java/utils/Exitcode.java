@@ -9,9 +9,13 @@ public enum Exitcode {
      */
     EX_USAGE(64),
     /**
-     * Indicates incorrect input data, in this case, souce code.
+     * Indicates incorrect input data, in this case, source code.
      */
-    EX_DATAERR(65);
+    EX_DATAERR(65),
+    /**
+     * Indicates internal software error, not related to OS.
+     */
+    EX_SOFTWARE(70);
 
     public final int value;
 
