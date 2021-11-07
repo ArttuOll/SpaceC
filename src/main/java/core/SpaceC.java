@@ -1,5 +1,6 @@
 package core;
 
+import interpreter.Interpreter;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -9,16 +10,17 @@ import lexer.Lexer;
 import lexer.Token;
 import parser.Parser;
 import parser.expression.Expression;
-import parser.expression.util.AbstractSyntaxTreePrinter;
 import utils.Exitcode;
 import utils.FileToStringConverter;
 import utils.PropertiesReader;
 
 public class SpaceC {
 
+    private static final Interpreter interpreter = new Interpreter();
+    public static boolean hasError = false;
+    public static boolean hasRuntimeError = false;
     static PropertiesReader propertiesReader = new PropertiesReader(
         "src/main/resources/strings.properties");
-    public static boolean hasError = false;
 
     public static void main(String[] args) throws IOException {
 
@@ -47,6 +49,9 @@ public class SpaceC {
         if (hasError) {
             System.exit(Exitcode.EX_DATAERR.value);
         }
+        if (hasRuntimeError) {
+            System.exit((Exitcode.EX_SOFTWARE.value));
+        }
     }
 
     private static void runPrompt() throws IOException {
@@ -72,7 +77,7 @@ public class SpaceC {
     private static void run(String source) {
         Lexer lexer = new Lexer(source);
         List<Token> tokens = lexer.scanTokens();
-        tokens.forEach(System.out::println);
+
         Parser parser = new Parser(tokens);
         Expression expression = parser.parse();
 
@@ -80,7 +85,6 @@ public class SpaceC {
             return;
         }
 
-        AbstractSyntaxTreePrinter printer = new AbstractSyntaxTreePrinter();
-        System.out.println(printer.print(expression));
+        interpreter.interpret(expression);
     }
 }
