@@ -43,7 +43,8 @@ public class ErrorReporter {
         System.err.printf(
             propertiesReader.getString("error_template"),
             error.token.line(),
-            error.getMessage()
+            error.getMessage(),
+            error.erroneousPart
         );
         SpaceC.hasRuntimeError = true;
     }

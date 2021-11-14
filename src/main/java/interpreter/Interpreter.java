@@ -85,6 +85,7 @@ public class Interpreter implements ExpressionVisitor<Object> {
         if (operatorType == PLUS) {
             checkNumberOperands(operator, right, left);
             return (double) left + (double) right;
+
         } else if (operatorType == MINUS) {
             checkNumberOperands(operator, right, left);
             return (double) left - (double) right;
@@ -94,24 +95,28 @@ public class Interpreter implements ExpressionVisitor<Object> {
             return (double) left * (double) right;
         } else if (operatorType == SLASH) {
             checkNumberOperands(operator, right, left);
-            // TODO: prevent division by zero
+            checkDivisionByZero(operator, right);
             return (double) left / (double) right;
 
         } else if (operatorType == GREATER) {
             checkNumberOperands(operator, right, left);
             return (double) left > (double) right;
+
         } else if (operatorType == GREATER_EQUAL) {
             checkNumberOperands(operator, right, left);
             return (double) left >= (double) right;
+
         } else if (operatorType == LESS) {
             checkNumberOperands(operator, right, left);
             return (double) left < (double) right;
+
         } else if (operatorType == LESS_EQUAL) {
             checkNumberOperands(operator, right, left);
             return (double) left <= (double) right;
 
         } else if (operatorType == EQUAL) {
             return isEqual(right, left);
+
         } else if (operatorType == BANG_EQUAL) {
             return !isEqual(right, left);
         }
@@ -124,8 +129,24 @@ public class Interpreter implements ExpressionVisitor<Object> {
         }
         throw new RuntimeError(
             operator,
-            propertiesReader.getString("interpreter_error_non_numeric_operands")
+            propertiesReader.getString("interpreter_error_non_numeric_operands"),
+            String.format(
+                "%s %s %s",
+                leftOperand.toString(),
+                operator.lexeme(),
+                rightOperand.toString()
+            )
         );
+    }
+
+    private void checkDivisionByZero(Token operator, Object divider) {
+        if (((double) divider == 0.0)) {
+            throw new RuntimeError(
+                operator,
+                propertiesReader.getString("interpreter_error_division_by_zero"),
+                String.format("%s %s ", operator.lexeme(), divider)
+            );
+        }
     }
 
     private boolean isEqual(Object right, Object left) {
@@ -158,7 +179,8 @@ public class Interpreter implements ExpressionVisitor<Object> {
         }
         throw new RuntimeError(
             operator,
-            propertiesReader.getString("interpreter_error_non_numeric_operand")
+            propertiesReader.getString("interpreter_error_non_numeric_operand"),
+            String.format("%s %s ", operator.lexeme(), operand.toString())
         );
     }
 

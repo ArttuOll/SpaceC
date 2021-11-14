@@ -1,6 +1,7 @@
 package interpreter;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static utils.TestExpressions.one;
 import static utils.TestExpressions.three;
 import static utils.TestExpressions.two;
@@ -174,10 +175,10 @@ public class ExpressionInterpretationTests {
         assertEquals(expected, actual);
     }
 
-    // @Test
-    // void throwsErrorOnDivisionByZero() {
-    //     Expression oneDividedByZero = new BinaryExpression(one, slashToken, zero);
-    //     Object actual = interpreter.interpretRaw(oneDividedByZero);
-    //     assertNull(actual);
-    // }
+    @Test
+    void throwsErrorOnDivisionByZero() {
+        Expression oneDividedByZero = new BinaryExpression(one, slashToken, zero);
+        Object actual = interpreter.interpretRaw(oneDividedByZero);
+        assertNull(actual);
+    }
 }
