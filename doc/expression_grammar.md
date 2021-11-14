@@ -1,7 +1,5 @@
 # Grammar for SpaceC expressions
 
-This is a rough version, which is enough for now, but improved in the future.
-
 ```
 expression -> equality ;
 equality -> comparison ( ( "=" | "!=" ) comparison )* ;
@@ -23,3 +21,7 @@ Name | Operators | Associates
 | Term | +, - | Left |
 | Factor | /, * | Left |
 | Unary | !, - | Right |
+
+Some notes:
+
+- Negative zero is allowed.

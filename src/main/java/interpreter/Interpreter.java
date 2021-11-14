@@ -42,6 +42,16 @@ public class Interpreter implements ExpressionVisitor<Object> {
         }
     }
 
+    public Object interpretRaw(Expression expression) {
+        try {
+            return evaluate(expression);
+        } catch (RuntimeError error) {
+            errorReporter.runtimeError(error);
+        }
+        return null;
+    }
+
+
     private String stringify(Object value) {
         if (value == null) {
             return "nil";

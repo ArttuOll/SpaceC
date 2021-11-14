@@ -1,21 +1,21 @@
 package parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static parser.TestExpressions.one;
-import static parser.TestExpressions.trueExpression;
-import static parser.TestExpressions.two;
-import static parser.TestTokens.bangToken;
-import static parser.TestTokens.eofToken;
-import static parser.TestTokens.equalsToken;
-import static parser.TestTokens.greaterThanToken;
-import static parser.TestTokens.leftParenthesisToken;
-import static parser.TestTokens.multiplyToken;
-import static parser.TestTokens.oneToken;
-import static parser.TestTokens.plusToken;
-import static parser.TestTokens.rightParenthesisToken;
-import static parser.TestTokens.stringToken;
-import static parser.TestTokens.trueToken;
-import static parser.TestTokens.twoToken;
+import static utils.TestExpressions.one;
+import static utils.TestExpressions.trueExpression;
+import static utils.TestExpressions.two;
+import static utils.TestTokens.bangToken;
+import static utils.TestTokens.eofToken;
+import static utils.TestTokens.equalsToken;
+import static utils.TestTokens.greaterThanToken;
+import static utils.TestTokens.leftParenthesisToken;
+import static utils.TestTokens.multiplyToken;
+import static utils.TestTokens.oneToken;
+import static utils.TestTokens.plusToken;
+import static utils.TestTokens.rightParenthesisToken;
+import static utils.TestTokens.stringToken;
+import static utils.TestTokens.trueToken;
+import static utils.TestTokens.twoToken;
 
 import java.util.Arrays;
 import lexer.Token;
