@@ -9,7 +9,7 @@ import java.util.Objects;
 import lexer.Lexer;
 import lexer.Token;
 import parser.Parser;
-import parser.expression.Expression;
+import parser.statement.Statement;
 import utils.Exitcode;
 import utils.FileToStringConverter;
 import utils.PropertiesReader;
@@ -79,12 +79,12 @@ public class SpaceC {
         List<Token> tokens = lexer.scanTokens();
 
         Parser parser = new Parser(tokens);
-        Expression expression = parser.parse();
+        List<Statement> statements = parser.parse();
 
         if (hasError) {
             return;
         }
 
-        interpreter.interpret(expression);
+        interpreter.interpret(statements);
     }
 }

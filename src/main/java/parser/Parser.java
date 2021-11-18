@@ -27,6 +27,7 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import lexer.Token;
@@ -37,6 +38,9 @@ import parser.expression.Expression;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.statement.ExpressionStatement;
+import parser.statement.PrintStatement;
+import parser.statement.Statement;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
 
@@ -66,12 +70,31 @@ public class Parser {
         this.propertiesReader = new PropertiesReader("src/main/resources/strings.properties");
     }
 
-    public Expression parse() {
-        try {
-            return expression();
-        } catch (ParseError error) {
-            return null;
+    public List<Statement> parse() {
+        List<Statement> statements = new ArrayList<>();
+        while (!isAtEnd()) {
+            statements.add(statement());
         }
+        return statements;
+    }
+
+    private Statement statement() {
+        if (matchNextTokenWith(PRINT)) {
+            return printStatement();
+        }
+        return expressionStatement();
+    }
+
+    private Statement printStatement() {
+        Expression value = expression();
+        consume(SEMICOLON, "parser_error_no_semicolon_after_statement");
+        return new PrintStatement(value);
+    }
+
+    private Statement expressionStatement() {
+        Expression value = expression();
+        consume(SEMICOLON, "parser_error_no_semicolon_after_statement");
+        return new ExpressionStatement(value);
     }
 
     private Expression expression() {

@@ -1,0 +1,8 @@
+package parser.statement;
+
+public interface StatementVisitor<R> {
+
+    R visitExpressionStatement(ExpressionStatement statement);
+
+    R visitPrintStatement(PrintStatement statement);
+}

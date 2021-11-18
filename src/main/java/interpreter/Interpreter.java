@@ -12,6 +12,7 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
 import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 
+import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.TokenType;
 import parser.expression.BinaryExpression;
@@ -20,10 +21,14 @@ import parser.expression.ExpressionVisitor;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.statement.ExpressionStatement;
+import parser.statement.PrintStatement;
+import parser.statement.Statement;
+import parser.statement.StatementVisitor;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
 
-public class Interpreter implements ExpressionVisitor<Object> {
+public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {
 
     private final PropertiesReader propertiesReader;
     private final ErrorReporter errorReporter;
@@ -33,15 +38,21 @@ public class Interpreter implements ExpressionVisitor<Object> {
         this.errorReporter = new ErrorReporter();
     }
 
-    public void interpret(Expression expression) {
+    public void interpret(List<Statement> statements) {
         try {
-            Object value = evaluate(expression);
-            System.out.println(stringify(value));
+            for (Statement statement : statements) {
+                execute(statement);
+            }
         } catch (RuntimeError error) {
             errorReporter.runtimeError(error);
         }
     }
 
+    private void execute(Statement statement) {
+        statement.accept(this);
+    }
+
+    // TODO: paivita testit kayttamaan uutta interpret-metodia.
     public Object interpretRaw(Expression expression) {
         try {
             return evaluate(expression);
@@ -69,6 +80,19 @@ public class Interpreter implements ExpressionVisitor<Object> {
         } else {
             return stringValue;
         }
+    }
+
+    @Override
+    public Void visitExpressionStatement(ExpressionStatement statement) {
+        evaluate(statement.expression);
+        return null;
+    }
+
+    @Override
+    public Void visitPrintStatement(PrintStatement statement) {
+        Object value = evaluate(statement.expression);
+        System.out.println(stringify(value));
+        return null;
     }
 
     @Override
@@ -213,5 +237,4 @@ public class Interpreter implements ExpressionVisitor<Object> {
     public Object visitLiteralExpression(LiteralExpression expression) {
         return expression.value;
     }
-
 }
