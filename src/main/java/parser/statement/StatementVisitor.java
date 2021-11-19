@@ -5,4 +5,6 @@ public interface StatementVisitor<R> {
     R visitExpressionStatement(ExpressionStatement statement);
 
     R visitPrintStatement(PrintStatement statement);
+
+    R visitVariableDeclarationStatement(VariableDeclarationStatement statement);
 }
