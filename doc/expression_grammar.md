@@ -7,7 +7,7 @@ comparison -> term ( ( ">" | ">=" | "<" | "<=" ) term )* ;
 term -> factor ( ( "+" | "-" ) factor )* ;
 factor -> unary ( ( "/" | "*" ) unary )* ;
 unary -> ("-" | "!") unary | primary ;
-primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" ;
+primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDENTIFIER ;
 ```
 
 ## Operator precedence and associativity
