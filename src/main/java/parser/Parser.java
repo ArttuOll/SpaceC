@@ -1,5 +1,6 @@
 package parser;
 
+import static lexer.tokenTypes.IdentifierToken.IDENTIFIER;
 import static lexer.tokenTypes.Keyword.CLASS;
 import static lexer.tokenTypes.Keyword.FALSE;
 import static lexer.tokenTypes.Keyword.FOR;
@@ -38,9 +39,11 @@ import parser.expression.Expression;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.expression.VariableExpression;
 import parser.statement.ExpressionStatement;
 import parser.statement.PrintStatement;
 import parser.statement.Statement;
+import parser.statement.VariableDeclarationStatement;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
 
@@ -73,9 +76,33 @@ public class Parser {
     public List<Statement> parse() {
         List<Statement> statements = new ArrayList<>();
         while (!isAtEnd()) {
-            statements.add(statement());
+            statements.add(declaration());
         }
         return statements;
+    }
+
+    private Statement declaration() {
+        try {
+            if (matchNextTokenWith(IDENTIFIER)) {
+                return variableDeclaration();
+            }
+            return statement();
+        } catch (ParseError error) {
+            synchronize();
+            return null;
+        }
+    }
+
+    private Statement variableDeclaration() {
+        Token name = consume(IDENTIFIER, "parser_error_expected_variable_name");
+
+        Expression initializer = null;
+        if (matchNextTokenWith(EQUAL)) {
+            initializer = expression();
+        }
+
+        consume(SEMICOLON, "parser_error_no_semicolon_after_variable_declaration");
+        return new VariableDeclarationStatement(name, initializer);
     }
 
     private Statement statement() {
@@ -165,6 +192,8 @@ public class Parser {
         } else if (matchNextTokenWith(NUMBER, STRING)) {
             Token matchedToken = previous();
             return new LiteralExpression(matchedToken.literal());
+        } else if (matchNextTokenWith(IDENTIFIER)) {
+            return new VariableExpression(previous());
         } else if (matchNextTokenWith(LEFT_PARENTHESIS)) {
             Expression expression = expression();
             consume(
