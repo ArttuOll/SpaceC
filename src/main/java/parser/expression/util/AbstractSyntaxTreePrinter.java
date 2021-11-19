@@ -7,6 +7,7 @@ import parser.expression.ExpressionVisitor;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.expression.VariableExpression;
 
 public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
 
@@ -34,6 +35,11 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     @Override
     public String visitLiteralExpression(LiteralExpression expression) {
         return expression.value == null ? "nil" : expression.value.toString();
+    }
+
+    @Override
+    public String visitVariableExpression(VariableExpression expression) {
+        return expression.name.lexeme();
     }
 
     private String toSchemeString(String name, Expression... expressions) {

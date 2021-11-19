@@ -4,7 +4,7 @@ program -> declaration* EOF ;
 
 declaration -> variableDeclaration | statement ;
 
-variableDeclaration -> IDENTIFIER ( "=" expression )? ";"
+variableDeclaration -> IDENTIFIER ( ":" expression )? ";"
 
 statement -> expressionStatement | printStatement ;
 

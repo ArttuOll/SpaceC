@@ -21,10 +21,12 @@ import parser.expression.ExpressionVisitor;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.expression.VariableExpression;
 import parser.statement.ExpressionStatement;
 import parser.statement.PrintStatement;
 import parser.statement.Statement;
 import parser.statement.StatementVisitor;
+import parser.statement.VariableDeclarationStatement;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
 
@@ -32,6 +34,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
 
     private final PropertiesReader propertiesReader;
     private final ErrorReporter errorReporter;
+    private final Environment environment = new Environment();
 
     public Interpreter() {
         this.propertiesReader = new PropertiesReader("src/main/resources/strings.properties");
@@ -92,6 +95,18 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     public Void visitPrintStatement(PrintStatement statement) {
         Object value = evaluate(statement.expression);
         System.out.println(stringify(value));
+        return null;
+    }
+
+    @Override
+    public Void visitVariableDeclarationStatement(VariableDeclarationStatement statement) {
+        Object value = null;
+        Expression initializer = statement.initializer;
+        if (initializer != null) {
+            value = evaluate(initializer);
+        }
+
+        environment.define(statement.name.lexeme(), value);
         return null;
     }
 
@@ -236,5 +251,10 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     @Override
     public Object visitLiteralExpression(LiteralExpression expression) {
         return expression.value;
+    }
+
+    @Override
+    public Object visitVariableExpression(VariableExpression expression) {
+        return environment.get(expression.name);
     }
 }

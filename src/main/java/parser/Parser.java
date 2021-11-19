@@ -13,6 +13,7 @@ import static lexer.tokenTypes.Keyword.TRUE;
 import static lexer.tokenTypes.Keyword.WHILE;
 import static lexer.tokenTypes.LiteralToken.NUMBER;
 import static lexer.tokenTypes.LiteralToken.STRING;
+import static lexer.tokenTypes.SingleCharacterToken.COLON;
 import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.MINUS;
 import static lexer.tokenTypes.SingleCharacterToken.PLUS;
@@ -94,14 +95,17 @@ public class Parser {
     }
 
     private Statement variableDeclaration() {
-        Token name = consume(IDENTIFIER, "parser_error_expected_variable_name");
+        Token name = previous();
 
         Expression initializer = null;
-        if (matchNextTokenWith(EQUAL)) {
+        if (matchNextTokenWith(COLON)) {
             initializer = expression();
         }
 
-        consume(SEMICOLON, "parser_error_no_semicolon_after_variable_declaration");
+        consume(
+            SEMICOLON,
+            propertiesReader.getString("parser_error_no_semicolon_after_variable_declaration")
+        );
         return new VariableDeclarationStatement(name, initializer);
     }
 
@@ -114,13 +118,13 @@ public class Parser {
 
     private Statement printStatement() {
         Expression value = expression();
-        consume(SEMICOLON, "parser_error_no_semicolon_after_statement");
+        consume(SEMICOLON, propertiesReader.getString("parser_error_no_semicolon_after_statement"));
         return new PrintStatement(value);
     }
 
     private Statement expressionStatement() {
         Expression value = expression();
-        consume(SEMICOLON, "parser_error_no_semicolon_after_statement");
+        consume(SEMICOLON, propertiesReader.getString("parser_error_no_semicolon_after_statement"));
         return new ExpressionStatement(value);
     }
 
