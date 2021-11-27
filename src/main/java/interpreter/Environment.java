@@ -26,4 +26,14 @@ public class Environment {
             key
         );
     }
+
+    public void assign(Token name, Object value) {
+        String key = name.lexeme();
+        if (values.containsKey(key)) {
+            values.put(key, value);
+            return;
+        }
+
+        throw new RuntimeError(name, "interpreter_error_undefined_variable", name.lexeme());
+    }
 }

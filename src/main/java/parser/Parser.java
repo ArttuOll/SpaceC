@@ -35,6 +35,7 @@ import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.EndOfFile;
 import lexer.tokenTypes.TokenType;
+import parser.expression.AssignmentExpression;
 import parser.expression.BinaryExpression;
 import parser.expression.Expression;
 import parser.expression.GroupingExpression;
@@ -129,7 +130,25 @@ public class Parser {
     }
 
     private Expression expression() {
-        return equality();
+        return assignment();
+    }
+
+    private Expression assignment() {
+        Expression lvalue = equality();
+
+        if (matchNextTokenWith(COLON)) {
+            Token equal = previous();
+            Expression rvalue = assignment();
+
+            if (lvalue instanceof VariableExpression) {
+                Token variableName = ((VariableExpression) lvalue).name;
+                return new AssignmentExpression(variableName, rvalue);
+            }
+
+            errorReporter.error(equal, "parser_error_invalid_assignment_target");
+        }
+
+        return lvalue;
     }
 
     private Expression equality() {

@@ -12,4 +12,6 @@ public interface ExpressionVisitor<R> {
 
     R visitVariableExpression(VariableExpression expression);
 
+    R visitAssignmentExpression(AssignmentExpression expression);
+
 }

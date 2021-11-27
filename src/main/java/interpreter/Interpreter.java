@@ -15,6 +15,7 @@ import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
 import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.TokenType;
+import parser.expression.AssignmentExpression;
 import parser.expression.BinaryExpression;
 import parser.expression.Expression;
 import parser.expression.ExpressionVisitor;
@@ -256,5 +257,13 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     @Override
     public Object visitVariableExpression(VariableExpression expression) {
         return environment.get(expression.name);
+    }
+
+    @Override
+    public Object visitAssignmentExpression(AssignmentExpression expression) {
+        Object value = evaluate(expression.value);
+        environment.assign(expression.name, value);
+        // Assignment is an expression, so we return the assigned value.
+        return value;
     }
 }

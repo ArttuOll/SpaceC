@@ -1,6 +1,7 @@
 package parser.expression.util;
 
 import java.util.Arrays;
+import parser.expression.AssignmentExpression;
 import parser.expression.BinaryExpression;
 import parser.expression.Expression;
 import parser.expression.ExpressionVisitor;
@@ -40,6 +41,11 @@ public class AbstractSyntaxTreePrinter implements ExpressionVisitor<String> {
     @Override
     public String visitVariableExpression(VariableExpression expression) {
         return expression.name.lexeme();
+    }
+
+    @Override
+    public String visitAssignmentExpression(AssignmentExpression expression) {
+        return expression.name + " " + expression.value;
     }
 
     private String toSchemeString(String name, Expression... expressions) {
