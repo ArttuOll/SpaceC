@@ -6,7 +6,9 @@ declaration -> variableDeclaration | statement ;
 
 variableDeclaration -> IDENTIFIER ( ":" expression )? ";"
 
-statement -> expressionStatement | printStatement ;
+statement -> expressionStatement | printStatement | block;
+
+block -> "{" declaration* "}" ;
 
 expressionStatement -> expression ; printStatement -> "print" expression ";" ;
 

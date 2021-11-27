@@ -7,4 +7,6 @@ public interface StatementVisitor<R> {
     R visitPrintStatement(PrintStatement statement);
 
     R visitVariableDeclarationStatement(VariableDeclarationStatement statement);
+
+    R visitBlockStatement(BlockStatement statement);
 }

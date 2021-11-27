@@ -23,6 +23,7 @@ import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
 import parser.expression.VariableExpression;
+import parser.statement.BlockStatement;
 import parser.statement.ExpressionStatement;
 import parser.statement.PrintStatement;
 import parser.statement.Statement;
@@ -35,7 +36,7 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
 
     private final PropertiesReader propertiesReader;
     private final ErrorReporter errorReporter;
-    private final Environment environment = new Environment();
+    private Environment environment = new Environment();
 
     public Interpreter() {
         this.propertiesReader = new PropertiesReader("src/main/resources/strings.properties");
@@ -265,5 +266,24 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
         environment.assign(expression.name, value);
         // Assignment is an expression, so we return the assigned value.
         return value;
+    }
+
+    @Override
+    public Void visitBlockStatement(BlockStatement blockStatement) {
+        executeBlock(blockStatement.statements, new Environment(environment));
+        return null;
+    }
+
+    private void executeBlock(List<Statement> statements, Environment localEnvironment) {
+        Environment globalEnvironment = this.environment;
+        try {
+            this.environment = localEnvironment;
+
+            for (Statement statement : statements) {
+                execute(statement);
+            }
+        } finally {
+            this.environment = globalEnvironment;
+        }
     }
 }

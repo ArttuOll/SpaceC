@@ -14,9 +14,11 @@ import static lexer.tokenTypes.Keyword.WHILE;
 import static lexer.tokenTypes.LiteralToken.NUMBER;
 import static lexer.tokenTypes.LiteralToken.STRING;
 import static lexer.tokenTypes.SingleCharacterToken.COLON;
+import static lexer.tokenTypes.SingleCharacterToken.LEFT_BRACE;
 import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.MINUS;
 import static lexer.tokenTypes.SingleCharacterToken.PLUS;
+import static lexer.tokenTypes.SingleCharacterToken.RIGHT_BRACE;
 import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
 import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
 import static lexer.tokenTypes.SingleCharacterToken.SLASH;
@@ -42,6 +44,7 @@ import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
 import parser.expression.VariableExpression;
+import parser.statement.BlockStatement;
 import parser.statement.ExpressionStatement;
 import parser.statement.PrintStatement;
 import parser.statement.Statement;
@@ -113,6 +116,8 @@ public class Parser {
     private Statement statement() {
         if (matchNextTokenWith(PRINT)) {
             return printStatement();
+        } else if (matchNextTokenWith(LEFT_BRACE)) {
+            return new BlockStatement(block());
         }
         return expressionStatement();
     }
@@ -127,6 +132,16 @@ public class Parser {
         Expression value = expression();
         consume(SEMICOLON, propertiesReader.getString("parser_error_no_semicolon_after_statement"));
         return new ExpressionStatement(value);
+    }
+
+    private List<Statement> block() {
+        List<Statement> statements = new ArrayList<>();
+
+        while (!checkNextTokenMatches(RIGHT_BRACE) && !isAtEnd()) {
+            statements.add(declaration());
+        }
+        consume(RIGHT_BRACE, "parser_error_unclosed_block");
+        return statements;
     }
 
     private Expression expression() {
