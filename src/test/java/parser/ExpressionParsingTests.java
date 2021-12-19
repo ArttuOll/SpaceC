@@ -1,6 +1,7 @@
 package parser;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static parser.TestUtils.initializeParser;
 import static utils.TestExpressions.one;
 import static utils.TestExpressions.trueExpression;
 import static utils.TestExpressions.two;
@@ -19,9 +20,7 @@ import static utils.TestTokens.trueToken;
 import static utils.TestTokens.twoToken;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import lexer.Token;
 import org.junit.jupiter.api.Test;
 import parser.expression.BinaryExpression;
 import parser.expression.GroupingExpression;
@@ -171,9 +170,5 @@ public class ExpressionParsingTests {
         var expected = new ArrayList<Statement>(List.of(new ExpressionStatement(expression)));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
-    }
-
-    private Parser initializeParser(Token... tokens) {
-        return new Parser(Arrays.asList(tokens));
     }
 }
