@@ -15,13 +15,13 @@ primary -> NUMBER | STRING | "true" | "false" | "nil" | "(" expression ")" | IDE
 
 From lowest to highest:
 
-Name | Operators | Associates
-|----|-----------|-----------|
-| Equality| =, != | Left |
-| Comparison | <, <=, >, >= | Left|
-| Term | +, - | Left |
-| Factor | /, * | Left |
-| Unary | !, - | Right |
+| Name       | Operators    | Associates |
+|------------|--------------|------------|
+| Equality   | =, !=        | Left       |
+| Comparison | <, <=, >, >= | Left       |
+| Term       | +, -         | Left       |
+| Factor     | /, *         | Left       |
+| Unary      | !, -         | Right      |
 
 Some notes:
 
