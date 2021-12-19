@@ -13,83 +13,105 @@ import static utils.TestTokens.multiplyToken;
 import static utils.TestTokens.oneToken;
 import static utils.TestTokens.plusToken;
 import static utils.TestTokens.rightParenthesisToken;
+import static utils.TestTokens.semicolonToken;
 import static utils.TestTokens.stringToken;
 import static utils.TestTokens.trueToken;
 import static utils.TestTokens.twoToken;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import lexer.Token;
 import org.junit.jupiter.api.Test;
 import parser.expression.BinaryExpression;
-import parser.expression.Expression;
 import parser.expression.GroupingExpression;
 import parser.expression.LiteralExpression;
 import parser.expression.UnaryExpression;
+import parser.statement.ExpressionStatement;
+import parser.statement.Statement;
 
 public class ExpressionParsingTests {
 
     @Test
     void parsesEqualityExpressions() {
-        Parser parser = initializeParser(oneToken, equalsToken, twoToken, eofToken);
+        Parser parser = initializeParser(oneToken, equalsToken, twoToken, semicolonToken, eofToken);
 
-        BinaryExpression actual = (BinaryExpression) parser.parse();
+        List<Statement> actual = parser.parse();
 
-        var expected = new BinaryExpression(one, equalsToken, two);
+        var expression = new BinaryExpression(one, equalsToken, two);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void parsesComparisonExpressions() {
-        Parser parser = initializeParser(oneToken, greaterThanToken, twoToken, eofToken);
+        Parser parser = initializeParser(
+            oneToken,
+            greaterThanToken,
+            twoToken,
+            semicolonToken,
+            eofToken
+        );
 
-        BinaryExpression actual = (BinaryExpression) parser.parse();
+        List<Statement> actual = parser.parse();
 
-        var expected = new BinaryExpression(one, greaterThanToken, two);
+        var expression = new BinaryExpression(one, greaterThanToken, two);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void parsesTermExpressions() {
-        Parser parser = initializeParser(oneToken, plusToken, twoToken, eofToken);
+        Parser parser = initializeParser(oneToken, plusToken, twoToken, semicolonToken, eofToken);
 
-        BinaryExpression actual = (BinaryExpression) parser.parse();
+        var actual = parser.parse();
 
-        var expected = new BinaryExpression(one, plusToken, two);
+        var expression = new BinaryExpression(one, plusToken, two);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void parsesFactorExpressions() {
-        Parser parser = initializeParser(oneToken, multiplyToken, twoToken, eofToken);
+        Parser parser = initializeParser(
+            oneToken,
+            multiplyToken,
+            twoToken,
+            semicolonToken,
+            eofToken
+        );
 
-        BinaryExpression actual = (BinaryExpression) parser.parse();
+        var actual = parser.parse();
 
-        var expected = new BinaryExpression(one, multiplyToken, two);
+        var expression = new BinaryExpression(one, multiplyToken, two);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void parsesUnaryExpressions() {
-        Parser parser = initializeParser(bangToken, trueToken, eofToken);
+        Parser parser = initializeParser(bangToken, trueToken, semicolonToken, eofToken);
 
-        UnaryExpression actual = (UnaryExpression) parser.parse();
+        var actual = parser.parse();
 
-        var expected = new UnaryExpression(bangToken, trueExpression);
+        var expression = new UnaryExpression(bangToken, trueExpression);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void parsesPrimaryExpressions() {
-        Parser parser = initializeParser(trueToken, eofToken);
+        Parser parser = initializeParser(trueToken, semicolonToken, eofToken);
 
-        LiteralExpression actual = (LiteralExpression) parser.parse();
+        var actual = parser.parse();
 
-        var expected = new LiteralExpression(true);
+        var expression = new LiteralExpression(true);
+        var expected = List.of(new ExpressionStatement(expression));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
@@ -101,21 +123,28 @@ public class ExpressionParsingTests {
             oneToken,
             plusToken,
             oneToken,
+            semicolonToken,
             eofToken
         );
 
-        LiteralExpression actual = (LiteralExpression) parser.parse();
+        List<Statement> actual = parser.parse();
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(null);
+        List<Statement> expected = new ArrayList<>();
+        expected.add(null);
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
     void quitsIfTokensDontFitExpressionGrammar() {
         Parser parser = initializeParser(stringToken, eofToken);
 
-        LiteralExpression actual = (LiteralExpression) parser.parse();
+        List<Statement> actual = parser.parse();
 
-        assertThat(actual).usingRecursiveComparison().isEqualTo(null);
+        List<Statement> expected = new ArrayList<>();
+        expected.add(null);
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }
 
     @Test
@@ -128,16 +157,18 @@ public class ExpressionParsingTests {
             multiplyToken,
             twoToken,
             rightParenthesisToken,
+            semicolonToken,
             eofToken
         );
 
-        Expression actual = parser.parse();
+        List<Statement> actual = parser.parse();
 
-        var expected = new BinaryExpression(
+        var expression = new BinaryExpression(
             one,
             plusToken,
             new GroupingExpression(new BinaryExpression(one, multiplyToken, two))
         );
+        var expected = new ArrayList<Statement>(List.of(new ExpressionStatement(expression)));
 
         assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
     }

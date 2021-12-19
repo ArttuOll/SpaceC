@@ -44,4 +44,10 @@ public class TestTokens {
     );
     public static final Token eofToken = new Token(EndOfFile.EOF, "", null, 1);
     public static final Token stringToken = new Token(IdentifierToken.IDENTIFIER, "asdf", null, 1);
+    public static final Token semicolonToken = new Token(
+        SingleCharacterToken.SEMICOLON,
+        ";",
+        null,
+        1
+    );
 }
