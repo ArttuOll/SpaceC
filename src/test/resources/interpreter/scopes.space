@@ -1,0 +1,7 @@
+omenoita: 2;
+{
+  banaaneja: 3 + omenoita;
+  print banaaneja;
+}
+
+print omenoita;
