@@ -1,0 +1,9 @@
+a: 8;
+b: 4;
+
+// Basic arithmetic
+print a + b;
+print a - b;
+print b - a;
+print a * b;
+print a / b;
