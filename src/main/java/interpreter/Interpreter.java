@@ -1,36 +1,16 @@
 package interpreter;
 
-import static lexer.tokenTypes.SingleCharacterToken.MINUS;
-import static lexer.tokenTypes.SingleCharacterToken.PLUS;
-import static lexer.tokenTypes.SingleCharacterToken.SLASH;
-import static lexer.tokenTypes.SingleCharacterToken.STAR;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
-
-import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.TokenType;
-import parser.expression.AssignmentExpression;
-import parser.expression.BinaryExpression;
-import parser.expression.Expression;
-import parser.expression.ExpressionVisitor;
-import parser.expression.GroupingExpression;
-import parser.expression.LiteralExpression;
-import parser.expression.UnaryExpression;
-import parser.expression.VariableExpression;
-import parser.statement.BlockStatement;
-import parser.statement.ExpressionStatement;
-import parser.statement.PrintStatement;
-import parser.statement.Statement;
-import parser.statement.StatementVisitor;
-import parser.statement.VariableDeclarationStatement;
+import parser.expression.*;
+import parser.statement.*;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
+
+import java.util.List;
+
+import static lexer.tokenTypes.SingleCharacterToken.*;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.*;
 
 public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<Void> {
 
@@ -56,17 +36,6 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     private void execute(Statement statement) {
         statement.accept(this);
     }
-
-    // TODO: paivita testit kayttamaan uutta interpret-metodia.
-    public Object interpretRaw(Expression expression) {
-        try {
-            return evaluate(expression);
-        } catch (RuntimeError error) {
-            errorReporter.runtimeError(error);
-        }
-        return null;
-    }
-
 
     private String stringify(Object value) {
         if (value == null) {
