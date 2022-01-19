@@ -2,9 +2,7 @@
 
 program -> declaration* EOF ;
 
-declaration -> variableDeclaration | statement ;
-
-variableDeclaration -> IDENTIFIER ( ":" expression )? ";"
+declaration -> statement ;
 
 statement -> expressionStatement | printStatement | block;
 

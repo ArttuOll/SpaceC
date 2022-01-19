@@ -1,56 +1,26 @@
 package parser;
 
-import static lexer.tokenTypes.IdentifierToken.IDENTIFIER;
-import static lexer.tokenTypes.Keyword.CLASS;
-import static lexer.tokenTypes.Keyword.FALSE;
-import static lexer.tokenTypes.Keyword.FOR;
-import static lexer.tokenTypes.Keyword.FUN;
-import static lexer.tokenTypes.Keyword.IF;
-import static lexer.tokenTypes.Keyword.NIL;
-import static lexer.tokenTypes.Keyword.PRINT;
-import static lexer.tokenTypes.Keyword.RETURN;
-import static lexer.tokenTypes.Keyword.TRUE;
-import static lexer.tokenTypes.Keyword.WHILE;
-import static lexer.tokenTypes.LiteralToken.NUMBER;
-import static lexer.tokenTypes.LiteralToken.STRING;
-import static lexer.tokenTypes.SingleCharacterToken.COLON;
-import static lexer.tokenTypes.SingleCharacterToken.LEFT_BRACE;
-import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
-import static lexer.tokenTypes.SingleCharacterToken.MINUS;
-import static lexer.tokenTypes.SingleCharacterToken.PLUS;
-import static lexer.tokenTypes.SingleCharacterToken.RIGHT_BRACE;
-import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
-import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
-import static lexer.tokenTypes.SingleCharacterToken.SLASH;
-import static lexer.tokenTypes.SingleCharacterToken.STAR;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import lexer.Token;
 import lexer.tokenTypes.EndOfFile;
 import lexer.tokenTypes.TokenType;
-import parser.expression.AssignmentExpression;
-import parser.expression.BinaryExpression;
-import parser.expression.Expression;
-import parser.expression.GroupingExpression;
-import parser.expression.LiteralExpression;
-import parser.expression.UnaryExpression;
-import parser.expression.VariableExpression;
+import parser.expression.*;
 import parser.statement.BlockStatement;
 import parser.statement.ExpressionStatement;
 import parser.statement.PrintStatement;
 import parser.statement.Statement;
-import parser.statement.VariableDeclarationStatement;
 import utils.ErrorReporter;
 import utils.PropertiesReader;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import static lexer.tokenTypes.IdentifierToken.IDENTIFIER;
+import static lexer.tokenTypes.Keyword.*;
+import static lexer.tokenTypes.LiteralToken.NUMBER;
+import static lexer.tokenTypes.LiteralToken.STRING;
+import static lexer.tokenTypes.SingleCharacterToken.*;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.*;
 
 /**
  * This is the parser of SpaceC. It is a recursive descent parser, a type of top-down parser,
@@ -88,9 +58,6 @@ public class Parser {
 
     private Statement declaration() {
         try {
-            if (matchNextTokenWith(IDENTIFIER)) {
-                return variableDeclaration();
-            }
             return statement();
         } catch (ParseError error) {
             synchronize();
@@ -98,28 +65,14 @@ public class Parser {
         }
     }
 
-    private Statement variableDeclaration() {
-        Token name = previous();
-
-        Expression initializer = null;
-        if (matchNextTokenWith(COLON)) {
-            initializer = expression();
-        }
-
-        consume(
-            SEMICOLON,
-            propertiesReader.getString("parser_error_no_semicolon_after_variable_declaration")
-        );
-        return new VariableDeclarationStatement(name, initializer);
-    }
-
     private Statement statement() {
         if (matchNextTokenWith(PRINT)) {
             return printStatement();
         } else if (matchNextTokenWith(LEFT_BRACE)) {
             return new BlockStatement(block());
+        } else {
+            return expressionStatement();
         }
-        return expressionStatement();
     }
 
     private Statement printStatement() {

@@ -1,8 +1,9 @@
 package interpreter;
 
-import java.util.HashMap;
 import lexer.Token;
 import utils.PropertiesReader;
+
+import java.util.HashMap;
 
 public class Environment {
 
@@ -17,10 +18,6 @@ public class Environment {
 
     public Environment(Environment environment) {
         this.enclosingEnvironment = environment;
-    }
-
-    public void define(String name, Object value) {
-        values.put(name, value);
     }
 
     public Object get(Token name) {
@@ -54,6 +51,10 @@ public class Environment {
             return;
         }
 
-        throw new RuntimeError(name, "interpreter_error_undefined_variable", name.lexeme());
+        define(key, value);
+    }
+
+    private void define(String name, Object value) {
+        values.put(name, value);
     }
 }

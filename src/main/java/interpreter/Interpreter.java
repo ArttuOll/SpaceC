@@ -70,18 +70,6 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
     }
 
     @Override
-    public Void visitVariableDeclarationStatement(VariableDeclarationStatement statement) {
-        Object value = null;
-        Expression initializer = statement.initializer;
-        if (initializer != null) {
-            value = evaluate(initializer);
-        }
-
-        environment.define(statement.name.lexeme(), value);
-        return null;
-    }
-
-    @Override
     public Object visitBinaryExpression(BinaryExpression expression) {
         Object right = evaluate(expression.right);
         Object left = evaluate(expression.left);
