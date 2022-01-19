@@ -1,38 +1,37 @@
 package parser;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static parser.TestUtils.initializeParser;
-import static utils.TestExpressions.one;
-import static utils.TestExpressions.trueExpression;
-import static utils.TestExpressions.two;
-import static utils.TestTokens.bangToken;
-import static utils.TestTokens.colonToken;
-import static utils.TestTokens.eofToken;
-import static utils.TestTokens.equalsToken;
-import static utils.TestTokens.greaterThanToken;
-import static utils.TestTokens.identifierToken;
-import static utils.TestTokens.leftParenthesisToken;
-import static utils.TestTokens.multiplyToken;
-import static utils.TestTokens.oneToken;
-import static utils.TestTokens.plusToken;
-import static utils.TestTokens.rightParenthesisToken;
-import static utils.TestTokens.semicolonToken;
-import static utils.TestTokens.stringToken;
-import static utils.TestTokens.trueToken;
-import static utils.TestTokens.twoToken;
-
-import java.util.ArrayList;
-import java.util.List;
 import org.junit.jupiter.api.Test;
-import parser.expression.AssignmentExpression;
-import parser.expression.BinaryExpression;
-import parser.expression.GroupingExpression;
-import parser.expression.LiteralExpression;
-import parser.expression.UnaryExpression;
+import parser.expression.*;
 import parser.statement.ExpressionStatement;
 import parser.statement.Statement;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static parser.TestUtils.initializeParser;
+import static utils.TestExpressions.*;
+import static utils.TestTokens.*;
+
 public class ExpressionParsingTests {
+
+    @Test
+    void parsesAssignmentExpressions() {
+        Parser parser = initializeParser(
+                identifierToken,
+                colonToken,
+                twoToken,
+                semicolonToken,
+                eofToken
+        );
+
+        List<Statement> actual = parser.parse();
+
+        var expression = new AssignmentExpression(identifierToken, two);
+        var expected = List.of(new ExpressionStatement(expression));
+
+        assertThat(actual).usingRecursiveComparison().isEqualTo(expected);
+    }
 
     @Test
     void parsesEqualityExpressions() {
