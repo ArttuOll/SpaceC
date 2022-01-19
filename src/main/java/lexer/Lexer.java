@@ -1,34 +1,18 @@
 package lexer;
 
-import static lexer.tokenTypes.SingleCharacterToken.COLON;
-import static lexer.tokenTypes.SingleCharacterToken.COMMA;
-import static lexer.tokenTypes.SingleCharacterToken.DOT;
-import static lexer.tokenTypes.SingleCharacterToken.LEFT_BRACE;
-import static lexer.tokenTypes.SingleCharacterToken.LEFT_PARENTHESIS;
-import static lexer.tokenTypes.SingleCharacterToken.MINUS;
-import static lexer.tokenTypes.SingleCharacterToken.PLUS;
-import static lexer.tokenTypes.SingleCharacterToken.RIGHT_BRACE;
-import static lexer.tokenTypes.SingleCharacterToken.RIGHT_PARENTHESIS;
-import static lexer.tokenTypes.SingleCharacterToken.SEMICOLON;
-import static lexer.tokenTypes.SingleCharacterToken.SLASH;
-import static lexer.tokenTypes.SingleCharacterToken.STAR;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.BANG_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.GREATER_EQUAL;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS;
-import static lexer.tokenTypes.SingleOrTwoCharacterToken.LESS_EQUAL;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import lexer.tokenTypes.EndOfFile;
 import lexer.tokenTypes.IdentifierToken;
 import lexer.tokenTypes.LiteralToken;
 import lexer.tokenTypes.TokenType;
 import utils.ErrorReporter;
 import utils.EscapeCharacter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import static lexer.tokenTypes.SingleCharacterToken.*;
+import static lexer.tokenTypes.SingleOrTwoCharacterToken.*;
 
 /**
  * This is the tokenizer of SpaceC.
@@ -79,6 +63,7 @@ public class Lexer {
             case ';' -> addToken(SEMICOLON);
             case ':' -> addToken(COLON);
             case '*' -> addToken(STAR);
+            case '^' -> addToken(UP_ARROW);
             case '/' -> handleSlash();
             case '\n' -> sourceLine++;
             case ' ', '\t', '\r' -> {

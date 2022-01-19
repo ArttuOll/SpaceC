@@ -1,18 +1,14 @@
 package lexer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import lexer.tokenTypes.*;
+import org.junit.jupiter.api.Test;
+import utils.FileToStringConverter;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import lexer.tokenTypes.EndOfFile;
-import lexer.tokenTypes.IdentifierToken;
-import lexer.tokenTypes.Keyword;
-import lexer.tokenTypes.LiteralToken;
-import lexer.tokenTypes.SingleCharacterToken;
-import lexer.tokenTypes.SingleOrTwoCharacterToken;
-import org.junit.jupiter.api.Test;
-import utils.FileToStringConverter;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TokenizationTests {
 
@@ -32,6 +28,7 @@ public class TokenizationTests {
         expected.add(new Token(SingleCharacterToken.COMMA, ",", null, 1));
         expected.add(new Token(SingleCharacterToken.PLUS, "+", null, 1));
         expected.add(new Token(SingleCharacterToken.MINUS, "-", null, 1));
+        expected.add(new Token(SingleCharacterToken.UP_ARROW, "^", null, 1));
         expected.add(new Token(EndOfFile.EOF, "", null, 1));
 
         List<Token> actual = lexer.scanTokens();

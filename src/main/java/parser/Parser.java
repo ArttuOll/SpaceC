@@ -153,9 +153,20 @@ public class Parser {
     }
 
     private Expression factor() {
-        Expression expression = unary();
+        Expression expression = power();
 
         while (matchNextTokenWith(STAR, SLASH)) {
+            Token operator = previous();
+            Expression right = unary();
+            expression = new BinaryExpression(expression, operator, right);
+        }
+        return expression;
+    }
+
+    private Expression power() {
+        Expression expression = unary();
+
+        while (matchNextTokenWith(UP_ARROW)) {
             Token operator = previous();
             Expression right = unary();
             expression = new BinaryExpression(expression, operator, right);

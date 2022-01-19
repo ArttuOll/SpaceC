@@ -96,6 +96,10 @@ public class Interpreter implements ExpressionVisitor<Object>, StatementVisitor<
             checkDivisionByZero(operator, right);
             return (double) left / (double) right;
 
+        } else if (operatorType == UP_ARROW) {
+            checkNumberOperands(operator, right, left);
+            return Math.pow((double) left, (double) right);
+
         } else if (operatorType == GREATER) {
             checkNumberOperands(operator, right, left);
             return (double) left > (double) right;

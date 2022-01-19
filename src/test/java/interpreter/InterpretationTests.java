@@ -1,14 +1,15 @@
 package interpreter;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import core.SpaceC;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class InterpretationTests {
 
@@ -32,8 +33,8 @@ public class InterpretationTests {
     @Test
     void basicArithmeticTest() throws IOException {
         SpaceC.main(new String[]{
-            "/home/arttu/ohjelmistoprojektit/SpaceC/src/test/resources/interpreter/arithmetic.space"});
-        assertEquals("12\n4\n-4\n32\n2\n", output.toString());
+                "/home/arttu/ohjelmistoprojektit/SpaceC/src/test/resources/interpreter/arithmetic.space"});
+        assertEquals("12\n4\n-4\n32\n2\n4096\n", output.toString());
     }
 
     @Test
