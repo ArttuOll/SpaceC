@@ -1,5 +1,6 @@
 # SpaceC
-An interpreted C-like programming language
+
+A small interpreted C-like programming language. This is the complete specification, only variables and arithmetic are implemented.
 
 ***
 
